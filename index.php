@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crud Ajax</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            //load data mahasiswa saat aplikasi dijalankan 
+            loadData();
+
+            //Load form add
+            $("#contentData").on("click", "#addButton", function() {
+                $.ajax({
+                    url: 'addUser.php',
+                    type: 'get',
+                    success: function(data) {
+                        $('#contentData').html(data);
+                    }
+                });
+            });
+
+            //Load form edit dengan parameter IdMhsw
+            $("#contentData").on("click", "#EditButton", function() {
+                var id = $(this).attr("value");
+                $.ajax({
+                    url: 'editUser.php',
+                    type: 'get',
+                    data: {
+                        id: id
+                    },
+                    success: function(data) {
+                        $('#contentData').html(data);
+                    }
+                });
+            });
+
+            //button batal
+            $("#contentData").on("click", "#cancelButton", function() {
+                loadData();
+            });
+
+            //simpan data mahasiswa
+            $("#contentData").on("submit", "#formAdd", function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: 'aksi.php?action=save',
+                    type: 'post',
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        alert(data);
+                        loadData();
+                    }
+                });
+            });
+
+            //edit data mahasiswa
+            $("#contentData").on("submit", "#formEdit", function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: 'aksi.php?action=edit',
+                    type: 'post',
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        alert(data);
+                        loadData();
+                    }
+                });
+            });
+
+            //hapus data mahasiswa berdasarkan IdMhsw
+            $("#contentData").on("click", "#DeleteButton", function() {
+                var id = $(this).attr("value");
+                $.ajax({
+                    url: 'aksi.php?action=delete',
+                    type: 'post',
+                    data: {
+                        id: id
+                    },
+                    success: function(data) {
+                        alert(data);
+                        loadData();
+                    }
+                });
+            });
+        })
+
+        function loadData() {
+            $.ajax({
+                url: 'dataUser.php',
+                type: 'get',
+                success: function(data) {
+                    $('#contentData').html(data);
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+    
+    <div class="header">
+        Yonanda Putra Pamungkas<br>
+        2015091032
+    </div>
+
+    <div align="center">
+        <h2>Dashboard</h2>
+        <div id="contentData"></div>
+    </div>
+
+    <div class="footer">
+        @Pemrograman Web 2021
+    </div>
+</body>
+
+</html>
